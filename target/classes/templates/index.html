@@ -97,63 +97,80 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="relative bg-gradient-to-r from-navy-950 via-navy-900 to-slate-900 text-white py-20 overflow-hidden border-b-4 border-gold-500">
-        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 relative z-10">
-            <div class="grid lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold uppercase tracking-wider">
-                        <i class="fa-solid fa-compass"></i> Portal Oficial de Rutas & Comunidad
-                    </div>
-                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-tech tracking-tight leading-tight">
-                        EXPLORA NUEVOS <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-gold-600">HORIZONTES</span> JUNTOS
-                    </h2>
-                    <p class="text-slate-300 text-lg leading-relaxed max-w-2xl">
-                        Planifica tus rutas semanales y mensuales, calcula exactamente la gasolina y peajes, conoce tu nivel de participación y rueda seguro en la red de la comunidad.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-2">
-                        <a href="#rodadas" class="bg-gold-600 hover:bg-gold-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition flex items-center gap-2">
-                            VER PROGRAMACIÓN <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </a>
-                        <a href="#calculadora" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-7 py-3.5 rounded-xl transition flex items-center gap-2">
-                            <i class="fa-solid fa-calculator text-gold-400"></i> Presupuestar Ruta
-                        </a>
-                    </div>
-                </div>
-                <!-- Próxima Rodada Banner -->
-                <div class="lg:col-span-5">
-                    <div class="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-2xl relative">
-                        <div class="absolute -top-3 -right-3 bg-gold-500 text-navy-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
-                            Próxima Rodada
-                        </div>
-                        <div class="flex items-center gap-4 border-b border-white/10 pb-4 mb-4">
-                            <div class="w-14 h-14 bg-gold-500/20 text-gold-400 rounded-xl flex items-center justify-center font-bold text-xl border border-gold-500/40">
-                                <i class="fa-solid fa-route"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-xl text-white">Vuelta a Guatavita</h3>
-                                <p class="text-slate-400 text-xs"><i class="fa-solid fa-calendar text-gold-400"></i> Domingo 15 de Noviembre</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
-                            <div class="bg-white/5 p-3 rounded-lg">
-                                <span class="text-slate-400 text-xs block">Distancia</span>
-                                <span class="font-bold text-gold-400">185 Km</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-lg">
-                                <span class="text-slate-400 text-xs block">Presupuesto Estimado</span>
-                                <span class="font-bold text-emerald-400">$65.000 COP</span>
-                            </div>
-                        </div>
-                        <button class="w-full bg-gold-600 hover:bg-gold-700 text-white font-bold py-3 rounded-xl transition">
-                            Confirmar Asistencia (RSVP)
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+	<!-- 1. SECCIÓN INICIAL / HERO SECTION CON FONDO GRUPAL ILUMINADO -->
+	<section id="inicio" class="relative bg-slate-950 text-white overflow-hidden py-20 lg:py-32">
+		<!-- Imagen de Fondo más clara (subimos la opacidad y ajustamos el gradiente) -->
+		<div class="absolute inset-0 z-0">
+			<img src="./img/grupo-fondo.jpg" alt="Destinos Bikers Comunidad" class="w-full h-full object-cover object-center opacity-75 brightness-110">
+			<!-- Gradiente suave en los bordes para mantener la legibilidad sin oscurecer la foto -->
+			<div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-slate-950/40"></div>
+		</div>
+
+		<!-- Contenido Principal del Hero -->
+		<div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+				
+				<!-- Columna Izquierda: Títulos y Botones -->
+				<div class="lg:col-span-7 space-y-6">
+					<span class="inline-flex items-center gap-2 bg-gold-500/20 border border-gold-500/40 text-gold-300 text-xs px-3.5 py-1.5 rounded-full font-bold uppercase tracking-wider backdrop-blur-md shadow-lg">
+						<i class="fa-solid fa-location-dot"></i> Portal Oficial de Rutas & Comunidad
+					</span>
+					
+					<h1 class="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-none text-white drop-shadow-md">
+						EXPLORA NUEVOS <span class="text-gold-400">HORIZONTES</span> JUNTOS
+					</h1>
+					
+					<p class="text-slate-200 text-base sm:text-lg max-w-xl font-medium leading-relaxed drop-shadow">
+						Planifica tus rutas semanales y mensuales, calcula exactamente la gasolina y peajes, conoce tu nivel de participación y rueda seguro en la red de la comunidad.
+					</p>
+					
+					<div class="flex flex-wrap gap-4 pt-2">
+						<a href="#rodadas" class="bg-gold-500 hover:bg-gold-600 text-navy-950 font-bold px-7 py-3.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+							VER PROGRAMACIÓN <i class="fa-solid fa-chevron-right text-xs"></i>
+						</a>
+						<a href="#calculadora" class="bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 font-bold px-6 py-3.5 rounded-xl backdrop-blur-md transition text-sm flex items-center gap-2 shadow-lg">
+							<i class="fa-solid fa-calculator text-gold-400"></i> Presupuestar Ruta
+						</a>
+					</div>
+				</div>
+
+				<!-- Columna Derecha: Tarjeta de Próxima Rodada (Flotante) -->
+				<div class="lg:col-span-5">
+					<div class="bg-slate-900/90 border border-gold-500/40 rounded-3xl p-6 shadow-2xl backdrop-blur-md relative">
+						<span class="absolute -top-3 right-6 bg-gold-500 text-navy-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow">
+							Próxima Rodada
+						</span>
+						
+						<div class="flex items-center gap-3 mb-4">
+							<div class="w-12 h-12 rounded-2xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400 text-xl">
+								<i class="fa-solid fa-route"></i>
+							</div>
+							<div>
+								<h3 class="font-bold text-lg text-white">Vuelta a Guatavita</h3>
+								<p class="text-xs text-slate-300">📅 Domingo 15 de Noviembre</p>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-800 my-4 text-center">
+							<div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
+								<span class="block text-[10px] text-slate-400 uppercase font-semibold">Distancia</span>
+								<span class="text-lg font-bold text-white">185 Km</span>
+							</div>
+							<div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
+								<span class="block text-[10px] text-slate-400 uppercase font-semibold">Presupuesto Est.</span>
+								<span class="text-lg font-bold text-gold-400">$65.000 COP</span>
+							</div>
+						</div>
+
+						<a href="https://wa.me/573000000000" target="_blank" class="w-full bg-gold-500 hover:bg-gold-600 text-navy-950 font-bold py-3 rounded-xl transition text-center block text-sm shadow-md">
+							<i class="fa-brands fa-whatsapp"></i> Confirmar Asistencia (RSVP)
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
 
     <!-- Main Content -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-12 space-y-16">
@@ -602,7 +619,7 @@
                                 Presidente
                             </span>
                             <div class="w-32 h-32 rounded-full mx-auto my-3 border-4 border-gold-500 overflow-hidden shadow-md bg-slate-900 relative">
-                                <img src="/img/mafe.jpeg" alt="Mafe Fundadora Presidente" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                <img src="./img/mafe.jpeg" alt="Mafe Fundadora Presidente" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                             </div>
                             <h4 class="font-tech text-2xl font-black text-navy-900 tracking-wide mt-2">MAFE</h4>
                             <p class="text-xs text-gold-700 font-extrabold uppercase tracking-wider mb-4">Fundadora & Presidente</p>
@@ -617,7 +634,7 @@
                                 Vicepresidente
                             </span>
                             <div class="w-32 h-32 rounded-full mx-auto my-3 border-4 border-pink-400 overflow-hidden shadow-md bg-slate-900 relative">
-                                <img src="/img/paola.jpeg" alt="Paola Fundadora Vicepresidente" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                <img src="./img/paola.jpeg" alt="Paola Fundadora Vicepresidente" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                             </div>
                             <h4 class="font-tech text-2xl font-black text-navy-900 tracking-wide mt-2">PAOLA</h4>
                             <p class="text-xs text-pink-600 font-extrabold uppercase tracking-wider mb-4">Fundadora & Vicepresidente</p>
@@ -639,7 +656,7 @@
                         <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-md hover:shadow-lg hover:border-gold-500 transition duration-300 group flex flex-col justify-between">
                             <div>
                                 <div class="w-24 h-24 rounded-full mx-auto mb-3 border-2 border-amber-400 overflow-hidden shadow-sm bg-slate-900">
-                                    <img src="/img/dola.jpeg" alt="Dola Al Coordinador" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                    <img src="./img/dola.jpeg" alt="Dola Al Coordinador" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                                 </div>
                                 <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Coordinador</span>
                                 <h5 class="font-tech text-lg font-bold text-navy-900 mt-2">DOLA AL</h5>
@@ -654,7 +671,7 @@
                         <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-md hover:shadow-lg hover:border-gold-500 transition duration-300 group flex flex-col justify-between">
                             <div>
                                 <div class="w-24 h-24 rounded-full mx-auto mb-3 border-2 border-purple-400 overflow-hidden shadow-sm bg-slate-900">
-                                    <img src="/img/juliet.jpeg" alt="Juliet Coordinadora" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                    <img src="./img/juliet.jpeg" alt="Juliet Coordinadora" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                                 </div>
                                 <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Coordinadora</span>
                                 <h5 class="font-tech text-lg font-bold text-navy-900 mt-2">JULIET</h5>
@@ -669,7 +686,7 @@
                         <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-md hover:shadow-lg hover:border-gold-500 transition duration-300 group flex flex-col justify-between">
                             <div>
                                 <div class="w-24 h-24 rounded-full mx-auto mb-3 border-2 border-gold-500 overflow-hidden shadow-sm bg-slate-900">
-                                    <img src="/img/suarez.jpeg" alt="Suárez Líder" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                    <img src="./img/suarez.jpeg" alt="Suárez Líder" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                                 </div>
                                 <span class="bg-gold-100 text-gold-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Líder</span>
                                 <h5 class="font-tech text-lg font-bold text-navy-900 mt-2">SUÁREZ</h5>
@@ -684,7 +701,7 @@
                         <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-md hover:shadow-lg hover:border-gold-500 transition duration-300 group flex flex-col justify-between">
                             <div>
                                 <div class="w-24 h-24 rounded-full mx-auto mb-3 border-2 border-blue-500 overflow-hidden shadow-sm bg-slate-900">
-                                    <img src="/img/enrique.jpeg" alt="Enrique Líder Polar" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                    <img src="./img/enrique.jpeg" alt="Enrique Líder Polar" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                                 </div>
                                 <span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Líder Polar</span>
                                 <h5 class="font-tech text-lg font-bold text-navy-900 mt-2">ENRIQUE</h5>
@@ -699,7 +716,7 @@
                         <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-md hover:shadow-lg hover:border-gold-500 transition duration-300 group flex flex-col justify-between">
                             <div>
                                 <div class="w-24 h-24 rounded-full mx-auto mb-3 border-2 border-emerald-500 overflow-hidden shadow-sm bg-slate-900">
-                                    <img src="/img/fantasma.jpeg" alt="Fantasma Líder" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                                    <img src="./img/fantasma.jpeg" alt="Fantasma Líder" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
                                 </div>
                                 <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Líder</span>
                                 <h5 class="font-tech text-lg font-bold text-navy-900 mt-2">FANTASMA</h5>

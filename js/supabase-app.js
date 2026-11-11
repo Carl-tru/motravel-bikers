@@ -24,6 +24,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
     let approvedProfiles = [];
     let realtimeChannel = null;
     let sessionVersion = 0;
+    let activeSessionUserId = null;
+    let sessionInitialized = false;
     let activeFilter = 'todos';
 
     function showMessage(element, message, type = 'error') {
@@ -98,6 +100,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
     async function loadCensus() {
         if (!currentProfile || currentProfile.membership_status !== 'approved') return;
+        const session = currentSession;
+        const version = sessionVersion;
 
         const { data, error } = await supabase
             .from('profiles')
@@ -106,6 +110,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
             .order('full_name');
 
         if (error) throw error;
+        if (version !== sessionVersion || currentSession?.user.id !== session?.user.id) return;
         approvedProfiles = data;
         renderCensus();
     }
@@ -219,10 +224,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
     async function refreshData() {
         if (!currentSession) return;
         const version = sessionVersion;
+        const session = currentSession;
         const { data, error } = await supabase
             .from('profiles')
             .select('id, full_name, rider_role, motorcycle, riding_style, membership_status, activity_status')
-            .eq('id', currentSession.user.id)
+            .eq('id', session.user.id)
             .maybeSingle();
 
         if (version !== sessionVersion) return;
@@ -231,6 +237,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
         const { data: isAdmin, error: adminError } = await supabase.rpc('is_club_admin');
         if (adminError) throw adminError;
+        if (version !== sessionVersion || currentSession?.user.id !== session.user.id) return;
         currentIsAdmin = isAdmin === true;
         currentProfile = data;
         renderProfile(data);
@@ -246,7 +253,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
     }
 
     async function setSession(session) {
+        const userId = session?.user.id || null;
+        if (sessionInitialized && userId === activeSessionUserId) {
+            currentSession = session;
+            return;
+        }
+
+        sessionInitialized = true;
+        activeSessionUserId = userId;
         sessionVersion += 1;
+        const version = sessionVersion;
         currentSession = session;
         currentProfile = null;
         currentIsAdmin = false;
@@ -256,10 +272,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
         if (joinButton) joinButton.textContent = session ? 'Mi cuenta' : 'Unirme al Club';
 
         if (realtimeChannel) {
-            await supabase.removeChannel(realtimeChannel);
+            const previousChannel = realtimeChannel;
             realtimeChannel = null;
+            await supabase.removeChannel(previousChannel);
         }
 
+        if (version !== sessionVersion) return;
         if (!session) {
             censusAccessMessage.hidden = false;
             document.getElementById('census-access-copy').textContent =
@@ -274,7 +292,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
         try {
             await refreshData();
-            const userId = session.user.id;
+            if (version !== sessionVersion) return;
             realtimeChannel = supabase
                 .channel(`profiles-${userId}`)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {

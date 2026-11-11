@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="supabase-url" content="https://pbfatjfjkxnbfvrgavpd.supabase.co" th:content="${supabaseUrl}">
+    <meta name="supabase-anon-key" content="sb_publishable_zGc9IeoBtuaaOHNiva_oAg_scqi3N4Z" th:content="${supabaseAnonKey}">
     <title>Motravel Bikers | Portal Oficial</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -82,7 +84,7 @@
             </nav>
             <!-- Action Buttons -->
             <div class="flex items-center space-x-3">
-                <a href="#registro" class="bg-gold-600 hover:bg-gold-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
+                <a id="join-button" href="#registro" class="bg-gold-600 hover:bg-gold-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
                     Unirme al Club
                 </a>
             </div>
@@ -377,210 +379,138 @@
             </div>
         </section>
 
-        <!-- SECCIÓN: PILOTOS, COPILOTOS Y ESTADO DE ACTIVIDAD (ESTILO CENSO) -->
-        <section id="pilotos" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-8">
-            
-            <!-- Encabezado y Filtros -->
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-slate-100 pb-6">
-                <div class="space-y-2">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold tracking-wide">
-                        <i class="fa-solid fa-users text-amber-500"></i> CENSO DE INTEGRANTES
+        <!-- Registro de miembros y censo privado -->
+        <section id="registro" class="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div class="mx-auto mb-8 max-w-2xl text-center">
+                <span class="inline-flex rounded-full border border-gold-200 bg-gold-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-gold-800">Comunidad Motravel Bikers</span>
+                <h2 class="mt-3 font-tech text-3xl font-extrabold tracking-tight text-navy-900">&Uacute;NETE AL CLUB</h2>
+                <p class="mt-2 text-sm text-slate-600">Crea tu cuenta para solicitar ingreso y consultar el censo privado de integrantes.</p>
+            </div>
+
+            <div id="supabase-config-message" role="alert" class="mb-6 hidden rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900"></div>
+
+            <div id="auth-forms" class="grid gap-8 lg:grid-cols-2">
+                <form id="sign-up-form" class="space-y-4 rounded-2xl border border-slate-200 p-5 sm:p-6">
+                    <h3 class="font-tech text-xl font-bold text-navy-900">Crear cuenta</h3>
+                    <label class="block text-sm font-semibold text-slate-700">Nombre completo
+                        <input name="full_name" type="text" autocomplete="name" minlength="2" maxlength="100" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Correo electr&oacute;nico
+                        <input name="email" type="email" autocomplete="email" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Contrase&ntilde;a (m&iacute;nimo 8 caracteres)
+                        <input name="password" type="password" autocomplete="new-password" minlength="8" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Quiero registrarme como
+                        <select name="rider_role" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                            <option value="pilot">Piloto</option>
+                            <option value="copilot">Copiloto</option>
+                        </select>
+                    </label>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <label class="block text-sm font-semibold text-slate-700">Moto (opcional)
+                            <input name="motorcycle" type="text" maxlength="100" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                        </label>
+                        <label class="block text-sm font-semibold text-slate-700">Estilo de rodada (opcional)
+                            <input name="riding_style" type="text" maxlength="100" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                        </label>
                     </div>
-                    <h2 class="text-3xl font-extrabold text-navy-900 font-sans tracking-tight">
-                        Pilotos, Copilotos y Estado de Actividad
-                    </h2>
-                    <p class="text-slate-500 text-sm">
-                        Identifica el rol de cada integrante y su constante participación en el club.
-                    </p>
-                </div>
+                    <button type="submit" class="w-full rounded-xl bg-gold-500 px-5 py-3 font-bold text-navy-950 transition hover:bg-gold-400">Enviar solicitud de ingreso</button>
+                    <p id="sign-up-message" role="status" aria-live="polite" hidden class="rounded-xl border p-3 text-sm"></p>
+                </form>
 
-                <!-- Botones Filtros Interactive Mock -->
-                <div class="flex flex-wrap items-center gap-2 text-xs font-bold">
-                    <button onclick="filtrar('todos')" id="btn-todos" class="px-4 py-2.5 rounded-full bg-amber-500 text-white shadow-sm transition">Todos</button>
-                    <button onclick="filtrar('piloto')" id="btn-piloto" class="px-4 py-2.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5"><i class="fa-solid fa-motorcycle text-amber-600"></i> Pilotos</button>
-                    <button onclick="filtrar('copiloto')" id="btn-copiloto" class="px-4 py-2.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5"><i class="fa-solid fa-user text-blue-500"></i> Copilotos</button>
-                    <button onclick="filtrar('hombre')" id="btn-hombre" class="px-4 py-2.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Hombres</button>
-                    <button onclick="filtrar('mujer')" id="btn-mujer" class="px-4 py-2.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Mujeres</button>
-                    <button onclick="filtrar('activo')" id="btn-activo" class="px-4 py-2.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Solo Activos</button>
-                </div>
+                <form id="sign-in-form" class="h-fit space-y-4 rounded-2xl border border-slate-200 p-5 sm:p-6">
+                    <h3 class="font-tech text-xl font-bold text-navy-900">Ya tengo cuenta</h3>
+                    <p class="text-sm text-slate-600">Inicia sesi&oacute;n para ver el censo o gestionar tu solicitud de ingreso.</p>
+                    <label class="block text-sm font-semibold text-slate-700">Correo electr&oacute;nico
+                        <input name="email" type="email" autocomplete="email" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Contrase&ntilde;a
+                        <input name="password" type="password" autocomplete="current-password" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                    </label>
+                    <button type="submit" class="w-full rounded-xl bg-navy-900 px-5 py-3 font-bold text-white transition hover:bg-navy-800">Iniciar sesi&oacute;n</button>
+                    <p id="sign-in-message" role="status" aria-live="polite" hidden class="rounded-xl border p-3 text-sm"></p>
+                </form>
             </div>
 
-            <!-- Tabla Censo Integrantes -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50/80 text-[11px] font-extrabold uppercase text-slate-500 tracking-wider border-y border-slate-100">
-                            <th class="py-4 px-4">INTEGRANTE</th>
-                            <th class="py-4 px-4">ROL</th>
-                            <th class="py-4 px-4">GÉNERO</th>
-                            <th class="py-4 px-4">MOTO / ASIGNACIÓN</th>
-                            <th class="py-4 px-4">ESTILO</th>
-                            <th class="py-4 px-4">ESTADO</th>
-                            <th class="py-4 px-4">% ASISTENCIA</th>
-                            <th class="py-4 px-4 text-center">CONTACTO</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm font-medium text-slate-700">
-                        
-                        <!-- Fila 1 -->
-                        <tr class="hover:bg-slate-50/50 transition member-row" data-rol="piloto" data-genero="hombre" data-estado="activo">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 font-extrabold text-sm flex items-center justify-center">C</div>
-                                    <span class="font-bold text-navy-900">Carlos Silva</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
-                                    <i class="fa-solid fa-motorcycle"></i> Piloto
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-slate-600">Hombre</td>
-                            <td class="py-4 px-4 text-slate-600">BMW R 1250 GS</td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">Paisajista</span>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Activo</span>
-                            </td>
-                            <td class="py-4 px-4 font-bold text-navy-900">
-                                98% <span class="text-[11px] font-normal text-slate-400 block">Asistencia</span>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <a href="https://wa.me/573000000000" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 font-bold hover:underline text-xs">
-                                    <i class="fab fa-whatsapp"></i> Chat
-                                </a>
-                            </td>
-                        </tr>
+            <div id="account-panel" hidden class="space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-slate-50 p-5">
+                    <div>
+                        <h3 class="font-tech text-xl font-bold text-navy-900">Hola, <span id="profile-name"></span></h3>
+                        <p id="profile-email" class="text-sm text-slate-500"></p>
+                        <p id="profile-status" class="mt-2 text-sm font-semibold text-gold-800"></p>
+                    </div>
+                    <button id="sign-out-button" type="button" class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white">Cerrar sesi&oacute;n</button>
+                </div>
 
-                        <!-- Fila 2 -->
-                        <tr class="hover:bg-slate-50/50 transition member-row" data-rol="piloto" data-genero="hombre" data-estado="frecuente">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-sky-100 text-sky-600 font-extrabold text-sm flex items-center justify-center">D</div>
-                                    <span class="font-bold text-navy-900">David Morales</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
-                                    <i class="fa-solid fa-motorcycle"></i> Piloto
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-slate-600">Hombre</td>
-                            <td class="py-4 px-4 text-slate-600">Yamaha MT-09</td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold">Candeleo / Velocidad</span>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">Frecuente</span>
-                            </td>
-                            <td class="py-4 px-4 font-bold text-navy-900">
-                                95% <span class="text-[11px] font-normal text-slate-400 block">Asistencia</span>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <a href="https://wa.me/573000000000" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 font-bold hover:underline text-xs">
-                                    <i class="fab fa-whatsapp"></i> Chat
-                                </a>
-                            </td>
-                        </tr>
+                <form id="profile-form" class="grid gap-4 rounded-2xl border border-slate-200 p-5 sm:grid-cols-2">
+                    <h3 class="font-tech text-lg font-bold text-navy-900 sm:col-span-2">Mi perfil</h3>
+                    <label class="block text-sm font-semibold text-slate-700">Nombre completo
+                        <input name="full_name" type="text" minlength="2" maxlength="100" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Rol
+                        <select name="rider_role" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal"><option value="pilot">Piloto</option><option value="copilot">Copiloto</option></select>
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Moto
+                        <input name="motorcycle" type="text" maxlength="100" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Estilo de rodada
+                        <input name="riding_style" type="text" maxlength="100" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal">
+                    </label>
+                    <button type="submit" class="rounded-xl bg-navy-900 px-5 py-3 font-bold text-white hover:bg-navy-800 sm:col-span-2">Guardar perfil</button>
+                    <p id="account-message" role="status" aria-live="polite" hidden class="rounded-xl border p-3 text-sm sm:col-span-2"></p>
+                </form>
 
-                        <!-- Fila 3 -->
-                        <tr class="hover:bg-slate-50/50 transition member-row" data-rol="piloto" data-genero="mujer" data-estado="activo">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-pink-100 text-pink-600 font-extrabold text-sm flex items-center justify-center">A</div>
-                                    <span class="font-bold text-navy-900">Andrea Gómez</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
-                                    <i class="fa-solid fa-motorcycle"></i> Piloto
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-slate-600">Mujer</td>
-                            <td class="py-4 px-4 text-slate-600">Kawasaki Ninja 400</td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold">Candeleo / Velocidad</span>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Activo</span>
-                            </td>
-                            <td class="py-4 px-4 font-bold text-navy-900">
-                                88% <span class="text-[11px] font-normal text-slate-400 block">Asistencia</span>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <a href="https://wa.me/573000000000" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 font-bold hover:underline text-xs">
-                                    <i class="fab fa-whatsapp"></i> Chat
-                                </a>
-                            </td>
-                        </tr>
+                <section id="admin-panel" hidden class="space-y-4 rounded-2xl border border-gold-200 bg-gold-50/50 p-5">
+                    <div>
+                        <h3 class="font-tech text-lg font-bold text-navy-900">Administraci&oacute;n de integrantes</h3>
+                        <p class="text-sm text-slate-600">Aprueba solicitudes y actualiza el estado de actividad del censo.</p>
+                    </div>
+                    <div id="admin-rows" class="space-y-3"></div>
+                </section>
+            </div>
+        </section>
 
-                        <!-- Fila 4 -->
-                        <tr class="hover:bg-slate-50/50 transition member-row" data-rol="copiloto" data-genero="mujer" data-estado="frecuente">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-pink-100 text-pink-600 font-extrabold text-sm flex items-center justify-center">C</div>
-                                    <span class="font-bold text-navy-900">Camila Torres</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-700 text-xs font-bold">
-                                    <i class="fa-solid fa-user"></i> Copiloto
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-slate-600">Mujer</td>
-                            <td class="py-4 px-4 text-slate-600">Acompañante C. Silva</td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">Paisajista</span>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">Frecuente</span>
-                            </td>
-                            <td class="py-4 px-4 font-bold text-navy-900">
-                                82% <span class="text-[11px] font-normal text-slate-400 block">Asistencia</span>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <a href="https://wa.me/573000000000" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 font-bold hover:underline text-xs">
-                                    <i class="fab fa-whatsapp"></i> Chat
-                                </a>
-                            </td>
-                        </tr>
-
-                        <!-- Fila 5 -->
-                        <tr class="hover:bg-slate-50/50 transition member-row" data-rol="piloto" data-genero="hombre" data-estado="activo">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 font-extrabold text-sm flex items-center justify-center">F</div>
-                                    <span class="font-bold text-navy-900">Felipe Ríos</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
-                                    <i class="fa-solid fa-motorcycle"></i> Piloto
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-slate-600">Hombre</td>
-                            <td class="py-4 px-4 text-slate-600">KTM Duke 790</td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold">Candeleo / Velocidad</span>
-                            </td>
-                            <td class="py-4 px-4">
-                                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Activo</span>
-                            </td>
-                            <td class="py-4 px-4 font-bold text-navy-900">
-                                90% <span class="text-[11px] font-normal text-slate-400 block">Asistencia</span>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <a href="https://wa.me/573000000000" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 font-bold hover:underline text-xs">
-                                    <i class="fab fa-whatsapp"></i> Chat
-                                </a>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+        <section id="pilotos" class="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div id="census-access-message" class="rounded-2xl bg-slate-50 p-6 text-center">
+                <i class="fa-solid fa-lock mb-3 text-2xl text-gold-600"></i>
+                <h2 class="font-tech text-xl font-bold text-navy-900">CENSO PRIVADO DE INTEGRANTES</h2>
+                <p id="census-access-copy" class="mt-2 text-sm text-slate-600">Inicia sesi&oacute;n con una cuenta aprobada para consultar pilotos, copilotos y estado de actividad.</p>
+                <a id="census-access-link" href="#registro" class="mt-4 inline-flex rounded-xl bg-gold-500 px-5 py-2.5 font-bold text-navy-950 hover:bg-gold-400">Iniciar sesi&oacute;n o registrarme</a>
             </div>
 
+            <div id="census-member-content" hidden class="space-y-6">
+                <div class="flex flex-col justify-between gap-4 border-b border-slate-100 pb-5 lg:flex-row lg:items-end">
+                    <div>
+                        <span class="inline-flex rounded-full border border-gold-200 bg-gold-50 px-3 py-1 text-xs font-bold tracking-wide text-gold-800"><i class="fa-solid fa-users mr-2"></i>CENSO DE INTEGRANTES</span>
+                        <h2 class="mt-3 font-tech text-2xl font-extrabold text-navy-900">Pilotos, Copilotos y Estado de Actividad</h2>
+                        <p class="mt-1 text-sm text-slate-500">Informaci&oacute;n disponible para integrantes aprobados.</p>
+                    </div>
+                    <p id="realtime-status" hidden role="status" class="text-xs font-semibold text-emerald-700"></p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 text-xs font-bold" aria-label="Filtrar integrantes">
+                    <button type="button" data-census-filter="todos" class="rounded-full bg-gold-500 px-4 py-2.5 text-white">Todos</button>
+                    <button type="button" data-census-filter="pilot" class="rounded-full bg-slate-100 px-4 py-2.5 text-slate-600">Pilotos</button>
+                    <button type="button" data-census-filter="copilot" class="rounded-full bg-slate-100 px-4 py-2.5 text-slate-600">Copilotos</button>
+                    <button type="button" data-census-filter="active" class="rounded-full bg-slate-100 px-4 py-2.5 text-slate-600">Solo activos</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left">
+                        <thead>
+                            <tr class="border-y border-slate-100 bg-slate-50 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+                                <th class="px-4 py-4">Integrante</th>
+                                <th class="px-4 py-4">Rol</th>
+                                <th class="px-4 py-4">Moto</th>
+                                <th class="px-4 py-4">Estilo</th>
+                                <th class="px-4 py-4">Actividad</th>
+                            </tr>
+                        </thead>
+                        <tbody id="member-rows" class="divide-y divide-slate-100 text-sm font-medium text-slate-700"></tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
 		<!-- 5. ORGANIGRAMA Y ESTRUCTURA ORGANIZATIVA -->
@@ -739,5 +669,6 @@
             document.getElementById('totalGasolina').innerText = '$' + Math.round(total).toLocaleString('es-CO') + ' COP';
         }
     </script>
+    <script type="module" src="./js/supabase-app.js"></script>
 </body>
 </html>

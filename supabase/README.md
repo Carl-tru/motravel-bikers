@@ -5,7 +5,7 @@ La aplicacion utiliza Supabase Auth para el registro y las sesiones, PostgreSQL 
 ## 1. Crear y configurar el proyecto
 
 1. Crea un proyecto en Supabase y abre **SQL Editor**.
-2. Ejecuta el contenido de [`schema.sql`](schema.sql). El script crea el perfil de cada usuario al registrarse, activa RLS y agrega la tabla a `supabase_realtime`.
+2. Ejecuta el contenido de [`schema.sql`](schema.sql). El script crea el perfil de cada usuario al registrarse, activa RLS y agrega la tabla a `supabase_realtime`. Si ya habías ejecutado una versión anterior, vuelve a ejecutar el script para agregar las columnas nuevas; es idempotente y conserva los perfiles existentes.
 3. En **Authentication > Providers**, habilita Email. Para exigir confirmacion de correo, conserva activada la confirmacion de email.
 4. En **Authentication > URL Configuration**, configura la URL local del sitio, por ejemplo `http://localhost:8080`, como **Site URL** y como URL permitida de redireccion.
 5. En **Project Settings > API**, copia el Project URL y la clave **publishable** (o la antigua clave `anon`).
@@ -52,4 +52,4 @@ where p.id = u.id
 
 3. Cierra e inicia sesion en el sitio. El administrador vera la herramienta para aprobar o rechazar solicitudes y actualizar la actividad de los integrantes.
 
-Las cuentas nuevas quedan pendientes y no pueden consultar el censo hasta ser aprobadas. Los miembros aprobados pueden leer el censo y editar solo su propio perfil; el estado de actividad y los permisos solo pueden cambiarlos los administradores. La clave publica no permite evitar estas politicas, que tambien se aplican directamente en PostgreSQL.
+Las cuentas nuevas quedan pendientes y no pueden consultar el censo hasta ser aprobadas. Los miembros aprobados pueden leer el censo y editar solo su propio perfil; el estado de actividad y los permisos solo pueden cambiarlos los administradores. El celular, la fecha de nacimiento y la descripción corta solo están disponibles para el titular y los administradores, no para el resto del censo. La clave publica no permite evitar estas politicas, que tambien se aplican directamente en PostgreSQL.

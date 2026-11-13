@@ -18,6 +18,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
     authForms.hidden = true;
 } else {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const today = new Date();
+    const latestBirthDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    document.querySelectorAll('input[name="date_of_birth"]').forEach((input) => {
+        input.max = latestBirthDate;
+    });
     let currentSession = null;
     let currentProfile = null;
     let currentIsAdmin = false;
@@ -140,7 +145,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
             const role = document.createElement('p');
             role.className = 'mt-1 text-xs text-slate-600';
             role.textContent = `${formatRole(profile.rider_role)}${profile.motorcycle ? ` · ${profile.motorcycle}` : ''}`;
-            details.append(name, email, role);
+            const phone = document.createElement('p');
+            phone.className = 'text-xs text-slate-600';
+            phone.textContent = profile.phone_number ? `Celular: ${profile.phone_number}` : '';
+            const birthDate = document.createElement('p');
+            birthDate.className = 'text-xs text-slate-600';
+            birthDate.textContent = profile.date_of_birth
+                ? `Nacimiento: ${new Date(`${profile.date_of_birth}T00:00:00`).toLocaleDateString('es-CO')}`
+                : '';
+            const about = document.createElement('p');
+            about.className = 'text-xs text-slate-600';
+            about.textContent = profile.about || '';
+            details.append(name, email, role, phone, birthDate, about);
 
             const membershipSelect = document.createElement('select');
             membershipSelect.className = 'rounded-lg border border-slate-300 px-3 py-2 text-sm';
@@ -214,6 +230,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
         form.elements.rider_role.value = profile.rider_role;
         form.elements.motorcycle.value = profile.motorcycle || '';
         form.elements.riding_style.value = profile.riding_style || '';
+        form.elements.phone_number.value = profile.phone_number || '';
+        form.elements.date_of_birth.value = profile.date_of_birth || '';
+        form.elements.about.value = profile.about || '';
 
         const isApproved = profile.membership_status === 'approved';
         censusAccessMessage.hidden = isApproved;
@@ -237,13 +256,17 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
         const { data: isAdmin, error: adminError } = await supabase.rpc('is_club_admin');
         if (adminError) throw adminError;
+        const { data: privateDetails, error: privateError } = await supabase.rpc('get_profile_private', {
+            p_profile_id: session.user.id
+        });
+        if (privateError) throw privateError;
         if (version !== sessionVersion || currentSession?.user.id !== session.user.id) return;
         currentIsAdmin = isAdmin === true;
-        currentProfile = data;
-        renderProfile(data);
+        currentProfile = { ...data, ...(privateDetails?.[0] || {}) };
+        renderProfile(currentProfile);
         clearMessage(document.getElementById('account-message'));
 
-        if (data.membership_status === 'approved') {
+        if (currentProfile.membership_status === 'approved') {
             await loadCensus();
         } else {
             approvedProfiles = [];
@@ -333,7 +356,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
                         full_name: values.full_name,
                         rider_role: values.rider_role,
                         motorcycle: values.motorcycle,
-                        riding_style: values.riding_style
+                        riding_style: values.riding_style,
+                        phone_number: values.phone_number,
+                        date_of_birth: values.date_of_birth,
+                        about: values.about
                     },
                     emailRedirectTo: `${window.location.origin}${window.location.pathname}`
                 }
@@ -390,7 +416,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
                     full_name: values.full_name,
                     rider_role: values.rider_role,
                     motorcycle: values.motorcycle || null,
-                    riding_style: values.riding_style || null
+                    riding_style: values.riding_style || null,
+                    phone_number: values.phone_number || null,
+                    date_of_birth: values.date_of_birth || null,
+                    about: values.about || null
                 })
                 .eq('id', currentSession.user.id);
             if (error) throw error;

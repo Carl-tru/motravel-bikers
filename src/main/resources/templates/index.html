@@ -395,6 +395,17 @@
                     <label class="block text-sm font-semibold text-slate-700">Nombre completo
                         <input name="full_name" type="text" autocomplete="name" minlength="2" maxlength="100" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
                     </label>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <label class="block text-sm font-semibold text-slate-700">Número de celular
+                            <input name="phone_number" type="tel" autocomplete="tel" maxlength="30" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                        </label>
+                        <label class="block text-sm font-semibold text-slate-700">Fecha de nacimiento
+                            <input name="date_of_birth" type="date" autocomplete="bday" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
+                        </label>
+                    </div>
+                    <label class="block text-sm font-semibold text-slate-700">Cuéntanos algo sobre ti (opcional, máximo 50 caracteres)
+                        <textarea name="about" maxlength="50" rows="2" class="mt-1 w-full resize-y rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none"></textarea>
+                    </label>
                     <label class="block text-sm font-semibold text-slate-700">Correo electr&oacute;nico
                         <input name="email" type="email" autocomplete="email" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal focus:border-gold-500 focus:outline-none">
                     </label>
@@ -447,6 +458,15 @@
                     <h3 class="font-tech text-lg font-bold text-navy-900 sm:col-span-2">Mi perfil</h3>
                     <label class="block text-sm font-semibold text-slate-700">Nombre completo
                         <input name="full_name" type="text" minlength="2" maxlength="100" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Número de celular
+                        <input name="phone_number" type="tel" autocomplete="tel" maxlength="30" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700">Fecha de nacimiento
+                        <input name="date_of_birth" type="date" autocomplete="bday" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal">
+                    </label>
+                    <label class="block text-sm font-semibold text-slate-700 sm:col-span-2">Cuéntanos algo sobre ti (opcional, máximo 50 caracteres)
+                        <textarea name="about" maxlength="50" rows="2" class="mt-1 w-full resize-y rounded-xl border border-slate-300 px-4 py-2.5 font-normal"></textarea>
                     </label>
                     <label class="block text-sm font-semibold text-slate-700">Rol
                         <select name="rider_role" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 font-normal"><option value="pilot">Piloto</option><option value="copilot">Copiloto</option></select>

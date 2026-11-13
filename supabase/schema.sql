@@ -4,12 +4,44 @@ create table if not exists public.profiles (
     rider_role text not null default 'pilot' check (rider_role in ('pilot', 'copilot')),
     motorcycle text check (motorcycle is null or char_length(motorcycle) <= 100),
     riding_style text check (riding_style is null or char_length(riding_style) <= 100),
+    phone_number text constraint profiles_phone_number_length_check check (phone_number is null or char_length(phone_number) <= 30),
+    date_of_birth date,
+    about text constraint profiles_about_length_check check (about is null or char_length(about) <= 50),
     account_role text not null default 'member' check (account_role in ('member', 'admin')),
     membership_status text not null default 'pending' check (membership_status in ('pending', 'approved', 'rejected')),
     activity_status text not null default 'inactive' check (activity_status in ('active', 'frequent', 'inactive')),
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
+
+alter table public.profiles
+    add column if not exists phone_number text,
+    add column if not exists date_of_birth date,
+    add column if not exists about text;
+
+do $$
+begin
+    if not exists (
+        select 1 from pg_constraint
+        where conname = 'profiles_phone_number_length_check'
+          and conrelid = 'public.profiles'::regclass
+    ) then
+        alter table public.profiles
+            add constraint profiles_phone_number_length_check
+            check (phone_number is null or char_length(phone_number) <= 30);
+    end if;
+
+    if not exists (
+        select 1 from pg_constraint
+        where conname = 'profiles_about_length_check'
+          and conrelid = 'public.profiles'::regclass
+    ) then
+        alter table public.profiles
+            add constraint profiles_about_length_check
+            check (about is null or char_length(about) <= 50);
+    end if;
+end;
+$$;
 
 create index if not exists profiles_approved_full_name_idx
     on public.profiles (full_name)
@@ -58,7 +90,10 @@ begin
         full_name,
         rider_role,
         motorcycle,
-        riding_style
+        riding_style,
+        phone_number,
+        date_of_birth,
+        about
     )
     values (
         new.id,
@@ -68,7 +103,10 @@ begin
             else 'pilot'
         end,
         left(nullif(btrim(new.raw_user_meta_data ->> 'motorcycle'), ''), 100),
-        left(nullif(btrim(new.raw_user_meta_data ->> 'riding_style'), ''), 100)
+        left(nullif(btrim(new.raw_user_meta_data ->> 'riding_style'), ''), 100),
+        left(nullif(btrim(new.raw_user_meta_data ->> 'phone_number'), ''), 30),
+        nullif(new.raw_user_meta_data ->> 'date_of_birth', '')::date,
+        left(nullif(btrim(new.raw_user_meta_data ->> 'about'), ''), 50)
     );
     return new;
 end;
@@ -99,7 +137,8 @@ begin
 end;
 $$;
 
-create or replace function public.list_profiles_for_admin()
+drop function if exists public.list_profiles_for_admin();
+create function public.list_profiles_for_admin()
 returns table (
     id uuid,
     email text,
@@ -108,6 +147,9 @@ returns table (
     membership_status text,
     activity_status text,
     motorcycle text,
+    phone_number text,
+    date_of_birth date,
+    about text,
     created_at timestamptz
 )
 language sql
@@ -116,11 +158,32 @@ security definer
 set search_path = ''
 as $$
     select p.id, u.email::text, p.full_name, p.rider_role,
-           p.membership_status, p.activity_status, p.motorcycle, p.created_at
+           p.membership_status, p.activity_status, p.motorcycle,
+           p.phone_number, p.date_of_birth, p.about, p.created_at
     from public.profiles p
     join auth.users u on u.id = p.id
     where public.is_club_admin()
     order by p.created_at desc;
+$$;
+
+create or replace function public.get_profile_private(p_profile_id uuid)
+returns table (
+    phone_number text,
+    date_of_birth date,
+    about text
+)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+    select p.phone_number, p.date_of_birth, p.about
+    from public.profiles p
+    where p.id = p_profile_id
+      and (
+          p.id = (select auth.uid())
+          or public.is_club_admin()
+      );
 $$;
 
 drop trigger if exists on_auth_user_created_profile on auth.users;
@@ -159,14 +222,19 @@ grant select (
     id, full_name, rider_role, motorcycle, riding_style,
     membership_status, activity_status, created_at
 ) on public.profiles to authenticated;
-grant update (full_name, rider_role, motorcycle, riding_style) on public.profiles to authenticated;
+grant update (
+    full_name, rider_role, motorcycle, riding_style,
+    phone_number, date_of_birth, about
+) on public.profiles to authenticated;
 grant update (membership_status, activity_status) on public.profiles to authenticated;
 revoke all on function public.is_approved_member() from public, anon;
 revoke all on function public.is_club_admin() from public, anon;
 revoke all on function public.list_profiles_for_admin() from public, anon;
+revoke all on function public.get_profile_private(uuid) from public, anon;
 grant execute on function public.is_approved_member() to authenticated;
 grant execute on function public.is_club_admin() to authenticated;
 grant execute on function public.list_profiles_for_admin() to authenticated;
+grant execute on function public.get_profile_private(uuid) to authenticated;
 
 do $$
 begin
